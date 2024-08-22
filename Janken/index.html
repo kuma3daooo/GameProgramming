@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/janken.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<header id="jank">
+    <h1>じゃんけんゲーム</h1>
+</header>
+
+<body>
+    <div class="enemy">
+        <p>こころんの手</p>
+            <img src="./img/suzuki.jpeg" alt="gu" width="150" style="display: block;" id="suzuki">
+            <img src="./img/janken_gu.png" alt="gu" width="100" style="display: none;" id="gu">
+            <img src="./img/janken_choki.png" alt="choki" width="100" style="display: none;" id="choki">
+            <img src="./img/janken_pa.png" alt="pa" width="100" style="display: none;" id="pa">
+    </div>
+    
+    <div class="mhand">
+        <p>自分の手</p>
+        <img src="./img/yamaguchi.jpeg" alt="gu" width="150" id="yamaguchi">
+        <img src="./img/janken_gu.png" alt="gu" style="display: none;" width="100" id="mgu">
+        <img src="./img/janken_choki.png" alt="choki" style="display: none;" width="100" id="mchoki">
+        <img src="./img/janken_pa.png" alt="pa" style="display: none;" width="100" id="mpa">
+    </div>
+
+    <div class="me">
+        <p>何を出すか選んでください</p>
+            <img src="./img/janken_gu.png" alt="gu" onclick="startjanken('gu')" width="100">
+            <img src="./img/janken_choki.png" alt="choki" onclick="startjanken('choki')" width="100">
+            <img src="./img/janken_pa.png" alt="pa" onclick="startjanken('pa')" width="100">
+    </div>
+
+    <!--リザルト表示-->
+    <div class="res">
+        <ul>
+            <li><h2 id="result">結果:</h2></li>
+            <li><h2 id="AllP">試合数：0回</h2></li>
+            <li><p id="winP">勝利数：0回</p></li>
+            <li><p id="loseP">敗北数：0回</p></li>
+            <li><p id="drowP">あいこの数：0回</p></li>
+            <li><p id="percent">勝率：0％</p></li>
+        </ul>
+    </div>
+
+    <!--使用回数表示-->
+    <div class="handcount">
+        <table border="1">
+            <tr>
+                <th>選んだ手</th>
+                <th>選んだ回数</th>
+            </tr>
+
+            <tr>
+                <td>グー</td>
+                <td id="Sgu">0回</td>
+            </tr>
+
+            <tr>
+                <td>パー</td>
+                <td id="Spa">0回</td>
+            </tr>
+
+            <tr>
+                <td>チョキ</td>
+                <td id="Schoki">0回</td>
+            </tr>
+
+        </table>
+    </div>
+
+    <!--ここからJS-->
+    <script>
+        //カウンタの初期値
+        let winCount = 0
+        let loseCount = 0
+        let drowCount = 0
+        let AllCount = 0
+        let guCount = 0
+        let paCount = 0
+        let chokiCount = 0
+
+        let myHandgu = document.getElementById("mgu")
+        let myHandpa = document.getElementById("mpa")
+        let myHandchoki = document.getElementById("mchoki")
+
+       
+        //相手の手をランダムに排出
+        function startjanken(yourchoice){
+            const hands = ["gu","choki","pa"]
+            var randomHands = Math.floor(Math.random() * hands.length)            
+        
+        
+        
+            //コンソールに相手の手を出力
+        console.log("enemy hand is：",hands[randomHands])
+        
+        if("mgu" == myHandgu){
+                myHandgu.style.display = 'block';
+                myHandpa.style.display = 'none';
+                myHandchoki.style.display = 'none';
+            }
+            else if("mpa" == myHandpa ){
+                youHandpa.style.display = 'block';
+                youHandgu.style.display = 'none';
+                youHandchoki.style.display = 'none';
+            }
+            else if("mchoki" == myHandchoki){
+                youHandchoki.style.display = 'block';
+                youHandgu.style.display = 'none';
+                youHandpa.style.display = 'none';
+                
+        }
+
+
+        //相手の手を定義
+        let youHandgu = document.getElementById("gu")
+        let youHandchoki = document.getElementById("choki")
+        let youHandpa = document.getElementById("pa")
+
+        //条件分岐で対応する画像のみを表示
+        if(hands[randomHands] == "pa"){
+            youHandpa.style.display = 'block';
+            youHandgu.style.display = 'none';
+            youHandchoki.style.display = 'none';
+        }
+        else if(hands[randomHands] == "choki"){
+            youHandchoki.style.display = 'block';
+            youHandgu.style.display = 'none';
+            youHandpa.style.display = 'none';
+        }
+        else if(hands[randomHands] == "gu"){
+            youHandgu.style.display = 'block';
+            youHandpa.style.display = 'none';
+            youHandchoki.style.display = 'none';
+        }
+
+        //結果と勝敗数を準備
+       let uptxt = document.getElementById("result")
+       let winPoint = document.getElementById("winP")
+       let losePoint = document.getElementById("loseP")
+       let drowPoint = document.getElementById("drowP")
+       let allPoint = document.getElementById("AllP")
+       let winPercent = document.getElementById("percent")
+       let Sgucount = document.getElementById("Sgu")
+       let Spacount = document.getElementById("Spa")
+       let Schokicount = document.getElementById("Schoki")
+
+       //勝敗判定
+        if(yourchoice == "pa" && hands[randomHands] == "gu"){
+            console.log("my hand is：",yourchoice)
+            console.log("win")
+            uptxt.textContent = "結果:You Win!!"
+            winCount++;
+            AllCount++;
+        }
+        else if (yourchoice == "pa" && hands[randomHands] == "choki"){
+            console.log("my hand is：",yourchoice)
+            console.log("lose")
+            uptxt.textContent = "結果:You Lose!!"
+            loseCount++;
+            AllCount++;
+        }
+        else if (yourchoice == "gu" && hands[randomHands] == "choki"){
+            console.log("my hand is：",yourchoice)
+            console.log("win")
+            uptxt.textContent = "結果:You Win!!"
+            winCount++;
+            AllCount++;
+        }
+        else if (yourchoice == "gu" && hands[randomHands] == "pa"){
+            console.log("my hand is：",yourchoice)
+            console.log("lose")
+            uptxt.textContent = "結果:You Lose!!"
+            loseCount++;
+            AllCount++;
+        }
+        else if (yourchoice == "choki" && hands[randomHands] == "pa"){
+            console.log("my hand is：",yourchoice)
+            console.log("win")
+            uptxt.textContent = "結果:You Win!!"
+            winCount++;
+            AllCount++;
+        }
+        else if (yourchoice == "choki" && hands[randomHands] == "gu"){
+            console.log("my hand is：",yourchoice)
+            console.log("lose")
+            uptxt.textContent = "結果:You Lose!!"
+            loseCount++;
+            AllCount++;
+        }
+        else if (yourchoice == hands[randomHands]){
+            console.log("my hand is：",yourchoice)
+            console.log("drow")
+            uptxt.textContent = "結果:Drow"
+            drowCount++;
+            AllCount++;
+        }
+        else {
+            console.log("my hand is：",yourchoice)
+            console,log("eroor")
+            uptxt.textContent = "Fuck you!!"
+        }
+
+        //使用回数抽出・出力
+        if (yourchoice === "gu") {
+            guCount++;
+            document.getElementById("Sgu").textContent = guCount + "回";
+        } 
+        else if (yourchoice === "pa") {
+            paCount++;
+            document.getElementById("Spa").textContent = paCount + "回";
+        } 
+        else if (yourchoice === "choki") {
+            chokiCount++;
+            document.getElementById("Schoki").textContent = chokiCount + "回";
+        }
+
+
+        //勝敗数の出力
+        winPoint.textContent = ("勝利数："+ winCount +"回")
+        losePoint.textContent = ("敗北数："+loseCount+"回")
+        drowPoint.textContent = ("あいこの数："+drowCount+"回")
+        allPoint.textContent = ("試合数："+AllCount+"回")
+        winPercent.textContent = ("勝率："+((winCount/AllCount)*100)+"％")
+        console.log("No."+AllCount)
+        
+    }
+        
+
+
+    </script>
+</body>
+</html>
