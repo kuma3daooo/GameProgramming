@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> 
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 18px;
+      color: #555;
+    }
+
+    img {
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    img:hover {
+      transform: scale(1.1);
+    }
+
+    .enemyImg {
+      margin: 10px;
+    }
+
+    img[onclick] {
+      margin: 5px;
+    }
+
+    #result {
+      font-weight: bold;
+      font-size: 20px;
+      color: #333;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>じゃんけんゲーム</h1>
+
+  <div style="display: flex;">
+    <p>相手の手</p>
+    <div>
+      <img width="100px" id="enemyGu" class="enemyImg" style="display: none;" src="./images/janken_gu.png"></img>
+      <img width="100px" id="enemyChoki" class="enemyImg" style="display: none;" src="./images/janken_choki.png"></img>
+      <img width="100px" id="enemyPa" class="enemyImg" style="display: none;" src="./images/janken_pa.png"></img>
+    </div>
+
+    <p>自分の手</p>
+    <div>
+      <img width="100px" id="gu" class="myImg" style="display: none;" src="./images/janken_gu.png"></img>
+      <img width="100px" id="choki" class="myImg" style="display: none;" src="./images/janken_choki.png"></img>
+      <img width="100px" id="pa" class="myImg" style="display: none;" src="./images/janken_pa.png"></img>
+    </div>
+  </div>
+
+  <p>何を出すか選んでください</p>
+  <img width="100px" onclick="startJanken('gu')" src="./images/janken_gu.png"></img>
+  <img width="100px" onclick="startJanken('choki')" src="./images/janken_choki.png"></img>
+  <img width="100px" onclick="startJanken('pa')" src="./images/janken_pa.png"></img>
+
+  <p id="result">結果: </p>
+  <script>
+    function startJanken(myChoice) {
+      refreshDisplay()
+
+      // 1. 選択肢の配列を用意する
+      const choices = ["enemyGu", "enemyChoki", "enemyPa"]
+
+      // 2. 配列から、1つの要素をランダムに選ぶ
+      // → Google検索してみる
+      const randomNumber = Math.floor(Math.random() * choices.length)
+      let enemyChoice = choices[randomNumber]
+      
+      // 3. 選ばれた手の画像を表示する(= display: blockにする)
+      const imgTag = document.getElementById(enemyChoice)
+      imgTag.style.display = "block"
+
+      const myImg = document.getElementById(myChoice)
+      myImg.style.display = "block"
+
+      let resultText = document.getElementById("result")
+      // "勝ち" "負け" "あいこ" のどれかの文字列が返ってくる
+      const result = getResult()
+      resultText.textContent = result
+    }
+
+    function refreshDisplay () {
+      const enemyImages = document.getElementsByClassName("enemyImg")
+      for (let i = 0; i < enemyImages.length; i++) {
+        enemyImages[i].style.display = "none"
+      }
+
+      const myImages = document.getElementsByClassName("myImg")
+      for (let i = 0; i < myImages.length; i++) {
+        myImages[i].style.display = "none"
+      }
+    }
+
+    function getResult() {
+      // 4. 勝ち負けを判定する
+      if (myChoice == "gu" && enemyChoice == "enemyChoki") {
+        return "勝ち"
+      } else if (myChoice == "gu" && enemyChoice == "enemyPa") {
+        return "負け"
+      } else if (myChoice == "choki" && enemyChoice == "enemyPa") {
+        return "勝ち"
+      } else if (myChoice == "choki" && enemyChoice == "enemyGu") {
+        return "負け"
+      } else if (myChoice == "pa" && enemyChoice == "enemyGu") {
+        return "勝ち"
+      } else if (myChoice == "pa" && enemyChoice == "enemyChoki") {
+        return "負け"
+      } else if (myChoice == enemyChoice) {
+        return "あいこ"
+      }
+    }
+  </script>
+</body>
+</html>

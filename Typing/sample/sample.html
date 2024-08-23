@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    p {
+      font-size: 1.2rem;
+    }
+    
+    #questionText {
+      color: orange;
+      font-weight: bold;
+      font-size: 100px;
+    }
+
+    #yourType {
+      font-size: 70px;
+    }
+
+    #wrongText {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+
+    #timeText {
+      color:goldenrod;
+      font-size: 60px;
+      display: none;
+    }
+
+    #nextText {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>タイピングゲーム👩‍💻</h1>
+
+  <p id="timeText"></p>
+  <p id="questionText"></p>
+  <button id="startButton" onclick="startGame()">スタート</button>
+
+  <h3 id="yourTypeText">あなたがタイプした文字👇</h3>
+  <p id="nextText">次の文字: </p>
+  <span id="yourType"></span>
+  <p id="wrongText">間違ってます😭</p>
+  <p>間違えた回数: <span id="wrongTypingCount">0</span></p>
+  <script>
+    const questions = ["apple", "banana", "pieapple", "sausage", "bird", "firefighter", "facebook", "peach", "rulebook"]
+    let questionNumber = 0
+    let textCounter = 0
+    let wrongTypingCount = 0
+    let answeredQuestionsCount = 0
+    let isGameStart = false
+    const questionText = document.getElementById("questionText")
+    const yourType = document.getElementById("yourType")
+    const wrongText = document.getElementById("wrongText")
+    const yourTypeText = document.getElementById("yourTypeText")
+    const timeText = document.getElementById("timeText")
+    const wrongTypingCountP = document.getElementById("wrongTypingCount")
+    const nextText = document.getElementById("nextText")
+    let startTime
+    let endTime
+
+    function startGame() {
+      resetPage()
+      questionNumber = setQuestionNumber()
+      questionText.innerHTML = questions[questionNumber]
+      startButton.style.display = "none"
+      isGameStart = true
+      startTime = new Date()
+    }
+
+    function setQuestionNumber() {
+      return Math.floor(Math.random() * questions.length)
+    }
+
+    function resetPage() {
+      textCounter = 0
+      questionNumber = 0
+      wrongTypingCount = 0
+      answeredQuestionsCount = 0
+      yourType.innerHTML = ""
+      questionText.style.display = "block"
+      yourTypeText.style.display = "block"
+      yourType.style.display = "block"
+      timeText.style.display = "none"
+      wrongTypingCountP.textContent = wrongTypingCount
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (!isGameStart) { return }
+
+      wrongText.style.display = "none"
+      nextText.textContent = ""
+
+      // console.log({ answeredQuestionsCount })
+      // console.log({ textCounter, questionNumber })
+      // console.log({ targetText: questions[questionNumber][textCounter], key: e.key })
+
+      if (questions[questionNumber].length > (textCounter + 1)) {
+        if (e.key == questions[questionNumber][textCounter]) {
+          // 正解の文字がタイプされた時
+          textCounter += 1
+        } else {
+          // 間違った文字がタイプされた時
+          wrongText.style.display = "block"
+          wrongTypingCount += 1
+          wrongTypingCountP.textContent = wrongTypingCount
+          nextText.textContent = `次の文字: ${questions[questionNumber][textCounter]}`
+        }
+      } else {
+        if (answeredQuestionsCount < 5) {
+          // 正解数が５問以下の場合は、次の問題にうつる
+          questionNumber = setQuestionNumber()
+          textCounter = 0
+          answeredQuestionsCount += 1
+          questionText.innerHTML = questions[questionNumber]
+        } else {
+          // 正解数が５問になったら、ゲームを終了する
+          endTime = new Date()
+          calculateTime()
+          startButton.style.display = "block"
+          isGameStart = false
+          questionText.style.display = "none"
+          yourTypeText.style.display = "none"
+          yourType.style.display = "none"
+        }
+      }
+      yourType.innerHTML = e.key
+    })
+
+    function calculateTime() {
+      const elapsedTimeMs = endTime - startTime;
+      const elapsedTimeSec = elapsedTimeMs / 1000; // 秒
+
+      timeText.style.display = "block"
+      timeText.textContent = elapsedTimeSec + "秒かかりました!!!"
+    }
+  </script>
+</body>
+</html> 
